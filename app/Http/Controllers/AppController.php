@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -24,10 +23,10 @@ class AppController extends Controller
         $file = $request->input('url');
         $response = Http::get($file);
 
-        if ($response->header('content-type') == 'image/gif'){
-            return redirect('/')->with('danger','YOUR LINK CONTAINS A GIF');
+        if ($response->header('content-type') == 'image/gif') {
+            return redirect('/')->with('danger', 'YOUR LINK CONTAINS A GIF');
         } else {
-            return redirect('/')->with('safe','It was not a gif!');
+            return redirect('/')->with('safe', 'It was not a gif!');
         }
     }
 }
