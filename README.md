@@ -1,5 +1,7 @@
 # IsItNotGif
 
+[![StyleCI](https://github.styleci.io/repos/318025473/shield?branch=main)](https://github.styleci.io/repos/318025473?branch=main)
+
 A simple web app that just checks your URL input if it's animated, \
 it specifically checks for mp4 and gifs, embedded or not.
 
