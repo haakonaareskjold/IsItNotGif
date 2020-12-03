@@ -26,10 +26,10 @@ class AppController extends Controller
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } elseif ($response->header('content-type') == 'video/mp4' || $response->header('content-type' == 'image/gif')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
-        } elseif($this->identify_apng($file) == true) {
+        } elseif ($this->identify_apng($file) == true) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
 
-            // idea from function at php.net - https://www.php.net/manual/en/function.imagecreatefromgif.php
+        // idea from function at php.net - https://www.php.net/manual/en/function.imagecreatefromgif.php
         } elseif (is_string($file)) {
             $fp = fopen($file, 'rb');
         } else {
@@ -63,7 +63,6 @@ class AppController extends Controller
         }
     }
 
-
     /**
      * @link https://stackoverflow.com/a/52687950
      * @param $filepath
@@ -75,7 +74,7 @@ class AppController extends Controller
 
         $fh = fopen($filepath, 'r');
         $previousdata = '';
-        while (!feof($fh)) {
+        while (! feof($fh)) {
             $data = fread($fh, 1024);
             if (strpos($data, 'acTL') !== false) {
                 $apng = true;
@@ -95,6 +94,5 @@ class AppController extends Controller
         fclose($fh);
 
         return $apng;
-
     }
 }
