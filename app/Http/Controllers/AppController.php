@@ -26,8 +26,10 @@ class AppController extends Controller
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } elseif ($response->header('content-type') == 'video/mp4' || $response->header('content-type' == 'image/gif')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
+        } elseif($this->identify_apng($file) == true) {
+            return redirect('/')->with('danger', 'CAREFUL, it is animated');
 
-        // idea from function at php.net - https://www.php.net/manual/en/function.imagecreatefromgif.php
+            // idea from function at php.net - https://www.php.net/manual/en/function.imagecreatefromgif.php
         } elseif (is_string($file)) {
             $fp = fopen($file, 'rb');
         } else {
@@ -59,5 +61,40 @@ class AppController extends Controller
         if ($frames > 1) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         }
+    }
+
+
+    /**
+     * @link https://stackoverflow.com/a/52687950
+     * @param $filepath
+     * @return bool
+     */
+    public function identify_apng($filepath): bool
+    {
+        $apng = false;
+
+        $fh = fopen($filepath, 'r');
+        $previousdata = '';
+        while (!feof($fh)) {
+            $data = fread($fh, 1024);
+            if (strpos($data, 'acTL') !== false) {
+                $apng = true;
+                break;
+            } elseif (strpos($previousdata.$data, 'acTL') !== false) {
+                $apng = true;
+                break;
+            } elseif (strpos($data, 'IDAT') !== false) {
+                break;
+            } elseif (strpos($previousdata.$data, 'IDAT') !== false) {
+                break;
+            }
+
+            $previousdata = $data;
+        }
+
+        fclose($fh);
+
+        return $apng;
+
     }
 }
