@@ -32,10 +32,10 @@ class AppController extends Controller
         $file = $request->input('url');
 
         try {
-             $response = Http::get($file);
-             if($response->failed()) {
-                 $response->throw();
-             }
+            $response = Http::get($file);
+            if ($response->failed()) {
+                $response->throw();
+            }
         } catch (RequestException $exception) {
             abort('500', $exception);
         }
