@@ -26,6 +26,10 @@
             background-color: #333;
             color: whitesmoke;
         }
+        .form-control{
+            display:inline-block;
+            width:100%
+        }
     </style>
 </head>
 <body>

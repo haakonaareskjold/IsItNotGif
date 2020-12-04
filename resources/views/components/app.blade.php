@@ -6,9 +6,9 @@
 
             <form method="post" action="/">
                 @csrf
-                <div class="col text-center justify-content-center align-self-center mt-5">
-                    <label class="border border-info rounded-lg font-weight-bold" for="url">URL
-                        <input class="input-group input-group-lg border border-info rounded-lg " type="url" name="url" id="url" required autofocus placeholder="https://i.imgur.com/NvzmsKM.png">
+                <div class="form-group col text-center justify-content-center align-self-center mt-5">
+                    <label  for="url">URL
+                        <input class="form-control" type="url" name="url" id="url" required autofocus>
                     </label>
                     @error('url')
                     <p class="alert-warning text-sm-center mt-2">{{ $message }}</p>
