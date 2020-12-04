@@ -21,6 +21,8 @@ class AppController extends Controller
     public function store(Request $request)
     {
         $file = $request->input('url');
+        $request->session()->flash('link', "$file");
+
         $response = Http::get($file);
         if (str_contains($response->body(), '.gif') || str_contains($response->body(), '.mp4')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');

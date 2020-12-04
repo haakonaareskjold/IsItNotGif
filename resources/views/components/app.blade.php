@@ -30,4 +30,9 @@
             <h1 class="bg-success text-dark">{{ session('safe')}}</h1>
             @endif
     </div>
+    <div class="col text-center justify-content-center align-self-center mt-5">
+        @if( session('link'))
+            <h1 class="bg-info text-light">{{ session('link') }}</h1>
+        @endif
+    </div>
 </x-master>
