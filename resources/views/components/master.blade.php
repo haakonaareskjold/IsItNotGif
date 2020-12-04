@@ -30,6 +30,10 @@
             display:inline-block;
             width:100%
         }
+        a, a:hover, a:focus, a:active {
+            text-decoration: none;
+            color: inherit;
+        }
     </style>
 </head>
 <body>

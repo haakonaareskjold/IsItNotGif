@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class AppController extends Controller
 {
+    public function validateForm(Request $request): array
+    {
+        return $request->validate([
+            'url' => 'required|url|max:255',
+        ]);
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -20,11 +28,21 @@ class AppController extends Controller
 
     public function store(Request $request)
     {
+        $this->validateForm($request);
         $file = $request->input('url');
+
+        try {
+             $response = Http::get($file);
+             if($response->failed()) {
+                 $response->throw();
+             }
+        } catch (RequestException $exception) {
+            abort('500', $exception);
+        }
+
         $request->session()->flash('link', "$file");
 
-        $response = Http::get($file);
-        if (str_contains($response->body(), '.gif') || str_contains($response->body(), '.mp4')) {
+        if (str_contains($response->body(), 'gif') || str_contains($response->body(), 'mp4')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } elseif ($response->header('content-type') == 'video/mp4' || $response->header('content-type' == 'image/gif')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
