@@ -85,6 +85,8 @@ class AppController extends Controller
 
         if ($frames > 1) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
+        } else {
+            return redirect('/')->with('safe', 'it is NOT animated');
         }
     }
 
