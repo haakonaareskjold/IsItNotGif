@@ -72,7 +72,7 @@ class AppController extends Controller
     // Checks if header has returned with MIME-types of image/gif or video/mp4
     public function checkHttpHeader(): bool
     {
-        if ($this->response->header("Content-Type") == 'image/gif' || $this->response->header("Content-Type") == 'video/mp4') {
+        if ($this->response->header('Content-Type') == 'image/gif' || $this->response->header('Content-Type') == 'video/mp4') {
             return true;
         } else {
             return false;
