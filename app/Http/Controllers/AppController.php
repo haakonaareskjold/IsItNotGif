@@ -23,7 +23,6 @@ class AppController extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show()
@@ -31,11 +30,15 @@ class AppController extends Controller
         return view('components.app');
     }
 
+
+
     public function store(Request $request)
     {
+        // Validates forms and assigning request to $file var
         $this->validateForm($request);
         $file = $request->input('url');
 
+        // Tries to do a http request and assigns it to the property $response which uses the input, catches error
         try {
             $this->response = Http::get($file);
             if ($this->response->failed()) {
@@ -45,56 +48,45 @@ class AppController extends Controller
             abort('500', $exception);
         }
 
+        // Request will flash the URL submitted as long as the http request has happened, despite the outcome.
         $request->session()->flash('link', "$file");
 
-        if (str_contains($this->response->body(), 'gif') || str_contains($this->response->body(), 'mp4')) {
-            return redirect('/')->with('danger', 'CAREFUL, it is animated');
-        } elseif ($this->response->header('content-type') == 'video/mp4' || $this->response->header('content-type' == 'image/gif')) {
-            return redirect('/')->with('danger', 'CAREFUL, it is animated');
-        } elseif ($this->identify_apng($file) == true) {
-            return redirect('/')->with('danger', 'CAREFUL, it is animated');
-
-        // idea from function at php.net - https://www.php.net/manual/en/function.imagecreatefromgif.php
-        } elseif (is_string($file)) {
-            $fp = fopen($file, 'rb');
-        } else {
-            $fp = $file;
-
-            /* Make sure that we are at the beginning of the file */
-            fseek($fp, 0);
-        }
-
-        if (fread($fp, 3) !== 'GIF') {
-            fclose($fp);
-
-            return redirect('/')->with('safe', 'it is NOT animated');
-        }
-
-        $frames = 0;
-
-        while (! feof($fp) && $frames < 2) {
-            if (fread($fp, 1) === "\x00") {
-                /* Some of the animated GIFs do not contain graphic control extension (starts with 21 f9) */
-                if (fread($fp, 1) === "\x21" || fread($fp, 2) === "\x21\xf9" || fread($fp, 2) === "\x21\x2c") {
-                    $frames++;
-                }
-            }
-        }
-
-        fclose($fp);
-
-        if ($frames > 1) {
+        // Checks if methods are true and then redirects with message it is animated, else its safe, see methods below
+        if ($this->checkHttpHeader() == true || $this->checkHttpBody() == true || $this->identify_apng($file)) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } else {
-            return redirect('/')->with('safe', 'it is NOT animated');
+            return redirect('/')->with('safe', 'it is safe!');
         }
     }
+
+    // Checks if response body from http GET request contains str of either "gif" or "mp4"
+    public function checkHttpBody(): bool
+    {
+        if (str_contains($this->response->body(), 'gif') || str_contains($this->response->body(), 'mp4')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Checks if header has returned with MIME-types of image/gif or video/mp4
+    public function checkHttpHeader(): bool
+    {
+        if ($this->response->header("Content-Type") == 'image/gif' || $this->response->header("Content-Type") == 'video/mp4') {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 
     /**
      * @link https://stackoverflow.com/a/52687950
      * @param $filepath
      * @return bool
      */
+    // Checks if $file submitted has binary string sequence matching for APNG
     public function identify_apng($filepath): bool
     {
         $apng = false;
