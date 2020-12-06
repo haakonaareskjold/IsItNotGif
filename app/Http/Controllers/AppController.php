@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Http;
 
 class AppController extends Controller
 {
+    /**
+     * @var \Illuminate\Http\Client\Response
+     */
+    private $response;
+
     public function validateForm(Request $request): array
     {
         return $request->validate([
@@ -32,9 +37,9 @@ class AppController extends Controller
         $file = $request->input('url');
 
         try {
-            $response = Http::get($file);
-            if ($response->failed()) {
-                $response->throw();
+            $this->response = Http::get($file);
+            if ($this->response->failed()) {
+                $this->response->throw();
             }
         } catch (RequestException $exception) {
             abort('500', $exception);
@@ -42,9 +47,9 @@ class AppController extends Controller
 
         $request->session()->flash('link', "$file");
 
-        if (str_contains($response->body(), 'gif') || str_contains($response->body(), 'mp4')) {
+        if (str_contains($this->response->body(), 'gif') || str_contains($this->response->body(), 'mp4')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
-        } elseif ($response->header('content-type') == 'video/mp4' || $response->header('content-type' == 'image/gif')) {
+        } elseif ($this->response->header('content-type') == 'video/mp4' || $this->response->header('content-type' == 'image/gif')) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } elseif ($this->identify_apng($file) == true) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
