@@ -30,8 +30,6 @@ class AppController extends Controller
         return view('components.app');
     }
 
-
-
     public function store(Request $request)
     {
         // Validates forms and assigning request to $file var
@@ -77,9 +75,7 @@ class AppController extends Controller
         } else {
             return false;
         }
-
     }
-
 
     /**
      * @link https://stackoverflow.com/a/52687950
