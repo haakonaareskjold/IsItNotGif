@@ -96,12 +96,12 @@ class AppController extends Controller
             if (str_contains($data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (str_contains($previousdata . $data, 'acTL')) {
+            } elseif (str_contains($previousdata.$data, 'acTL')) {
                 $apng = true;
                 break;
             } elseif (str_contains($data, 'IDAT')) {
                 break;
-            } elseif (str_contains($previousdata . $data, 'IDAT')) {
+            } elseif (str_contains($previousdata.$data, 'IDAT')) {
                 break;
             }
 
