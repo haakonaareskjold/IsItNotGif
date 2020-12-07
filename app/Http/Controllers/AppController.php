@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class AppController extends Controller
 {
     /**
-     * @var \Illuminate\Http\Client\Response
+     * @var Response
      */
-    private $response;
+    public Response $response;
 
     public function validateForm(Request $request): array
     {
@@ -23,7 +25,7 @@ class AppController extends Controller
     /**
      * Handle the incoming request.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show()
     {
@@ -91,15 +93,15 @@ class AppController extends Controller
         $previousdata = '';
         while (! feof($fh)) {
             $data = fread($fh, 1024);
-            if (strpos($data, 'acTL') !== false) {
+            if (str_contains($data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (strpos($previousdata.$data, 'acTL') !== false) {
+            } elseif (str_contains($previousdata . $data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (strpos($data, 'IDAT') !== false) {
+            } elseif (str_contains($data, 'IDAT')) {
                 break;
-            } elseif (strpos($previousdata.$data, 'IDAT') !== false) {
+            } elseif (str_contains($previousdata . $data, 'IDAT')) {
                 break;
             }
 
