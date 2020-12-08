@@ -1,7 +1,8 @@
 stages:
     - build
+    - deploy
 
-composer:
+build:
   stage: build
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
@@ -16,3 +17,12 @@ composer:
   cache:
     paths:
       - vendor/
+
+
+deploy:
+  stage: deploy
+  dependencies:
+    - build
+  image: tiangolo/docker-with-compose:latest
+  script:
+    - docker-compose up -d
