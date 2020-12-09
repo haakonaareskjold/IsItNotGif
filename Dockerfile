@@ -1,7 +1,8 @@
-FROM php:apache-buster
+FROM webdevops/php-nginx:8.0
 WORKDIR /var/www/html
 ARG USER=nemesis
 ARG ID=1000
+
 
 
  # Adding user

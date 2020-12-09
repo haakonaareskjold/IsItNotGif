@@ -4,10 +4,11 @@ services:
 
   # App
   app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: webdevops/php-nginx:8.0
+    container_name: laravel
+    working_dir: /var/www
     volumes:
-      - .:/var/www/html
+      - .:/var/www/
+      - ./nginx:/etc/nginx/conf.d
     ports:
     - 8000:80
