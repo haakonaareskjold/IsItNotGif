@@ -30,4 +30,4 @@ codestyle:
   stage: test
   dependencies: []
   script:
-    - phpcs --standard=PSR12 --extensions=php app/Https/Controllers/AppController.php
+    - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
