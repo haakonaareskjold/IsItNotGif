@@ -1,9 +1,7 @@
-FROM php:8.0-fpm-alpine3.12
-WORKDIR /var/www/
+FROM php:apache-buster
+WORKDIR /var/www/html
 ARG USER=nemesis
 ARG ID=1000
-
-COPY composer.json composer.lock /var/www/
 
 
  # Adding user

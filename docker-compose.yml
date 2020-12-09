@@ -8,22 +8,6 @@ services:
       context: ./
       dockerfile: Dockerfile
     volumes:
-      - .:/var/www
-    networks:
-      - bridge
-
-  # Webserver
-  nginx:
-    image: nginx:1.19.4-alpine
+      - .:/var/www/html
     ports:
-      - 8000:80
-    volumes:
-      - .:/var/www
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - bridge
-
-
-networks:
-  bridge:
-    driver: bridge
+    - 8000:80
