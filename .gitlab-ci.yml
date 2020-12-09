@@ -1,8 +1,9 @@
 stages:
     - build
+    - test
     - deploy
 
-build:
+composer:
   stage: build
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
@@ -18,11 +19,15 @@ build:
     paths:
       - vendor/
 
-
-deploy:
-  stage: deploy
+phpunit:
+  stage: test
   dependencies:
     - build
-  image: tiangolo/docker-with-compose:latest
   script:
-    - docker-compose up -d
+    - phpunit --coverage-text --colors=never
+
+codestyle:
+  stage: test
+  dependencies: []
+  script:
+    - phpcs --standard=PSR12 --extensions=php app
