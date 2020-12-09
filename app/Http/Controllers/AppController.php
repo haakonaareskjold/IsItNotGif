@@ -52,7 +52,9 @@ class AppController extends Controller
         $request->session()->flash('link', "$file");
 
         // Checks if methods are true and then redirects with message it is animated, else its safe, see methods below
-        if ($this->checkHttpHeader() == true || $this->checkHttpBody() == true || $this->identify_apng($file)) {
+        if (
+            $this->checkHttpHeader() == true || $this->checkHttpBody() == true || $this->identifyApng($file)
+        ) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
         } else {
             return redirect('/')->with('safe', 'it is safe!');
@@ -72,7 +74,10 @@ class AppController extends Controller
     // Checks if header has returned with MIME-types of image/gif or video/mp4
     public function checkHttpHeader(): bool
     {
-        if ($this->response->header('Content-Type') == 'image/gif' || $this->response->header('Content-Type') == 'video/mp4') {
+        if (
+            $this->response->header('Content-Type') == 'image/gif' ||
+            $this->response->header('Content-Type') == 'video/mp4'
+        ) {
             return true;
         } else {
             return false;
@@ -85,7 +90,7 @@ class AppController extends Controller
      * @return bool
      */
     // Checks if $file submitted has binary string sequence matching for APNG
-    public function identify_apng($filepath): bool
+    public function identifyApng($filepath): bool
     {
         $apng = false;
 
@@ -96,12 +101,12 @@ class AppController extends Controller
             if (str_contains($data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (str_contains($previousdata.$data, 'acTL')) {
+            } elseif (str_contains($previousdata . $data, 'acTL')) {
                 $apng = true;
                 break;
             } elseif (str_contains($data, 'IDAT')) {
                 break;
-            } elseif (str_contains($previousdata.$data, 'IDAT')) {
+            } elseif (str_contains($previousdata . $data, 'IDAT')) {
                 break;
             }
 
