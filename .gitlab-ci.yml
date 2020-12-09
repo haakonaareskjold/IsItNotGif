@@ -22,7 +22,7 @@ composer:
 phpunit:
   stage: test
   dependencies:
-    - build
+    - composer
   script:
     - phpunit --coverage-text --colors=never
 
