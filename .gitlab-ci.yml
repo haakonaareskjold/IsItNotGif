@@ -31,3 +31,13 @@ codestyle:
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
+
+deploy:
+  stage: deploy
+  image: tiangolo/docker-with-compose
+  services:
+    - docker:dind
+  dependencies:
+    - composer
+  script:
+    - docker-compose up -d --build
