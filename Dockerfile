@@ -1,8 +1,7 @@
-FROM webdevops/php-nginx:8.0
-WORKDIR /var/www/html
+FROM php:8.0-fpm-alpine3.12
+WORKDIR /application
 ARG USER=nemesis
 ARG ID=1000
-
 
 
  # Adding user

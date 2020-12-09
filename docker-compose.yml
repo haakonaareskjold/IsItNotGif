@@ -4,11 +4,26 @@ services:
 
   # App
   app:
-    image: webdevops/php-nginx:8.0
-    container_name: laravel
-    working_dir: /var/www
+    build:
+      context: ./
+      dockerfile: Dockerfile
     volumes:
-      - .:/var/www/
-      - ./nginx:/etc/nginx/conf.d
+      - .:/application
+    networks:
+      - laravel
+
+  # Webserver
+  nginx:
+    image: nginx:1.19.4-alpine
     ports:
-    - 8000:80
+      - 8000:80
+    volumes:
+      - .:/application
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - laravel
+
+
+networks:
+  laravel:
+    driver: bridge
