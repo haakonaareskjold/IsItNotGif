@@ -52,6 +52,6 @@ release:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - "docker build -t ${CI_REGISTRY}/isitnotgif:latest --pull ."
-    - "docker push ${CI_REGISTRY}/isitnotgif:latest:latest"
+    - "docker push ${CI_REGISTRY}/isitnotgif:latest"
   after_script:
     - "docker logout ${CI_REGISTRY}"
