@@ -21,7 +21,18 @@ composer:
     expire_in: 1 days
     when: always
 
+phpunit:
+  stage: test
+  dependencies:
+    - composer
+  script:
+    - phpunit --coverage-text --colors=never
 
+codestyle:
+  stage: test
+  dependencies: []
+  script:
+    - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
 
 deploy:
   stage: deploy
