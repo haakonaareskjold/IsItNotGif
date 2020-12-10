@@ -1,7 +1,7 @@
 <x-master>
     <div class="flex-column">
         <div class="col text-center justify-content-center align-self-center mt-lg-5">
-            <h1>Check link for animation, testing:</h1>
+            <h1>Check link for animation</h1>
         </div>
 
             <form method="post" action="/">
