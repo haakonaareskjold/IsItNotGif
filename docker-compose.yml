@@ -8,27 +8,19 @@ services:
       context: ./
       dockerfile: Dockerfile
     volumes:
-      - .:/var/www
+      - ./:/var/www/
     networks:
       - bridge
 
   # Webserver
   nginx:
     image: nginx:1.19.4-alpine
-    ports:
-      - 8000:80
-    volumes:
-      - .:/var/www
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - bridge
-
-  composer:
-    image: composer:2.0.7
-    command: composer install --no-dev
     working_dir: /var/www
     volumes:
-      - .:/var/www
+      - ./:/var/www/
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - 8000:80
     networks:
       - bridge
 

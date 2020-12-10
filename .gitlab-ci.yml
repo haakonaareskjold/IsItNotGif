@@ -3,21 +3,24 @@ stages:
     - test
     - deploy
 
+
 composer:
   stage: build
+  image: lorisleiva/laravel-docker:latest
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
     - php artisan key:generate
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
   artifacts:
     paths:
       - vendor/
       - .env
     expire_in: 1 days
     when: always
-  cache:
-    paths:
-      - vendor/
 
 phpunit:
   stage: test
@@ -31,3 +34,11 @@ codestyle:
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
+
+deploy:
+  stage: deploy
+  image: tiangolo/docker-with-compose
+  script:
+    - docker-compose build
+    - docker-compose down
+    - docker-compose up -d --force-recreate
