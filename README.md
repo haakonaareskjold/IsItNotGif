@@ -1,6 +1,7 @@
 # IsItNotGif
 
-[![Gitlab](https://gitlab.com/haakon36/IsItNotGif/badges/pipeline/pipeline.svg)](https://gitlab.com/haakon36/IsItNotGif/-/commits/pipeline)
+[![pipeline status](https://gitlab.com/haakon36/isitnotgif/badges/main/pipeline.svg)](https://gitlab.com/haakon36/isitnotgif/-/commits/main)
+
 
 A simple web app that just checks your URL input if it's animated, \
 it specifically checks for mp4 and gifs, embedded or not.
