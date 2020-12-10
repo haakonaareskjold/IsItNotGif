@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+
+  # App
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - .:/application
+    networks:
+      - laravel
+
+  # Webserver
+  nginx:
+    image: registry.gitlab.com/haakon36/isitnotgif:latest
+    ports:
+      - 8000:80
+    volumes:
+      - .:/application
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - laravel
+
+
+networks:
+  laravel:
+    driver: bridge
