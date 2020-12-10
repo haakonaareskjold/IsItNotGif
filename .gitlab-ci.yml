@@ -26,8 +26,6 @@ composer:
 deploy:
   stage: deploy
   image: tiangolo/docker-with-compose
-  tags:
-    - v2
   script:
     - docker-compose build
     - docker-compose down
