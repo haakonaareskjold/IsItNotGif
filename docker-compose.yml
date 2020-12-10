@@ -7,12 +7,17 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/
     networks:
       - bridge
 
   # Webserver
   nginx:
     image: nginx:1.19.4-alpine
+    volumes:
+      - ./:/var/www/
+      - ./nginx:/etc/nginx/conf.d
     ports:
       - 8000:80
     networks:
