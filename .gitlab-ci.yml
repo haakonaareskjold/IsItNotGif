@@ -28,8 +28,6 @@ deploy:
   image: tiangolo/docker-with-compose
   tags:
     - v2
-  services:
-    - docker:dind
   script:
     - docker-compose build
     - docker-compose down
