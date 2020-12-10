@@ -1,6 +1,5 @@
 stages:
     - build
-    - test
     - deploy
 
 
@@ -27,8 +26,6 @@ composer:
 deploy:
   stage: deploy
   image: tiangolo/docker-with-compose
-  only:
-    - "pipeline"
   services:
     - docker:dind
   script:
