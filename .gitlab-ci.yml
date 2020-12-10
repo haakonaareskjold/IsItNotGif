@@ -1,7 +1,6 @@
 stages:
     - build
     - test
-    - release
     - deploy
 
 
@@ -23,53 +22,16 @@ composer:
     expire_in: 1 days
     when: always
 
-phpunit:
-  stage: test
-  dependencies:
-    - composer
-  script:
-    - phpunit --coverage-text --colors=never
 
-codestyle:
-  stage: test
-  cache: {}
-  dependencies: []
-  script:
-    - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
-
-release:
-  stage: release
-  image: docker:latest
-  only:
-    - "pipeline"
-  services:
-    - docker:dind
-  variables:
-    DOCKER_DRIVER: "overlay"
-  before_script:
-  - docker version
-  - "docker info"
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - "docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest --pull ."
-    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
-  after_script:
-    - "docker logout ${CI_REGISTRY}"
 
 deploy:
   stage: deploy
-  image: gitlab/dind:latest
+  image: tiangolo/docker-with-compose
   only:
     - "pipeline"
   services:
     - docker:dind
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo "$DEPLOY_SERVER_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - eval "$(ssh-agent -s)"
-    - ssh-add ~/.ssh/id_rsa
-    - ssh-keyscan -H 10.0.0.194 >> ~/.ssh/known_hosts
   script:
-    - scp -r  ./docker-compose.autodeploy.yml nemesis@10.0.0.194:~/
-    - ssh nemesis@10.0.0.194 "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}; docker-compose -f docker-compose.autodeploy.yml stop; docker-compose -f docker-compose.autodeploy.yml rm web --force; docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest; docker-compose -f docker-compose.autodeploy.yml up -d"
+    - docker-compose build
+    - docker-compose down
+    - docker-compose up -d --force-recreate
