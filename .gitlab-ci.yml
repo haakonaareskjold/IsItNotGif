@@ -26,6 +26,8 @@ composer:
 deploy:
   stage: deploy
   image: tiangolo/docker-with-compose
+  tags:
+    - v2
   services:
     - docker:dind
   script:
