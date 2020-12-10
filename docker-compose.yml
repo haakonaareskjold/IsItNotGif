@@ -17,6 +17,8 @@ services:
     image: nginx:1.19.4-alpine
     ports:
       - 8000:80
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
     networks:
       - bridge
 
