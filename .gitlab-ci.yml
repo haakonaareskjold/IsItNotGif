@@ -1,23 +1,27 @@
 stages:
     - build
     - test
+    - release
     - deploy
+
 
 composer:
   stage: build
+  image: lorisleiva/laravel-docker:latest
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
     - php artisan key:generate
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
   artifacts:
     paths:
       - vendor/
       - .env
     expire_in: 1 days
     when: always
-  cache:
-    paths:
-      - vendor/
 
 phpunit:
   stage: test
@@ -28,16 +32,26 @@ phpunit:
 
 codestyle:
   stage: test
+  cache: {}
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
 
-deploy:
-  stage: deploy
-  image: tiangolo/docker-with-compose
+release:
+  stage: release
+  image: docker:latest
+  only:
+    - "pipeline"
   services:
     - docker:dind
-  dependencies:
-    - composer
+  variables:
+    DOCKER_DRIVER: "overlay"
+  before_script:
+  - docker version
+  - "docker info"
+  - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - docker-compose up -d --build --force-recreate
+    - "docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest --pull ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
