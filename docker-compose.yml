@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
 
@@ -17,6 +17,7 @@ services:
     image: nginx:1.19.4-alpine
     working_dir: /var/www
     volumes:
+      - ./:/var/www/
       - ./nginx:/etc/nginx/conf.d
     ports:
       - 8000:80
