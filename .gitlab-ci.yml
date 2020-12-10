@@ -39,6 +39,6 @@ deploy:
   stage: deploy
   image: tiangolo/docker-with-compose
   script:
-    - docker-compose build
-    - docker-compose down
-    - docker-compose up -d --force-recreate
+    - docker-compose -f docker-compose.deploy.yml build
+    - docker-compose -f docker-compose.deploy.yml down
+    - docker-compose -f docker-compose.deploy.yml up -d --force-recreate
