@@ -31,8 +31,6 @@ services:
       - "traefik.http.routers.isitnotgif-secure.tls=true"
       - "traefik.http.routers.isitnotgif-secure.tls.certresolver=myresolver"
       - "traefik.docker.network=traefik-proxy"
-    ports:
-      - 8000:80
     networks:
       - bridge
       - traefik-proxy
