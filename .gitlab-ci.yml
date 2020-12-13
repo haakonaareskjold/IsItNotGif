@@ -37,6 +37,8 @@ phpunit:
 
 codestyle:
   stage: test
+  only:
+    - main
   tags:
     - dev
   dependencies: []
