@@ -31,7 +31,7 @@ phpunit:
   only:
     - main
   tags:
-    - main
+    - dev
   dependencies:
     - composer
   script:
@@ -42,7 +42,7 @@ codestyle:
   only:
     - main
   tags:
-    - deploy
+    - dev
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
