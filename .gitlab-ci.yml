@@ -30,6 +30,8 @@ phpunit:
   stage: test
   only:
     - main
+  tags:
+    - dev
   dependencies:
     - composer
   script:
