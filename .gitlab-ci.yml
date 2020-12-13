@@ -9,7 +9,7 @@ composer:
   only:
     - production
   tags:
-    - production
+    - deploy
   image: lorisleiva/laravel-docker:latest
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
@@ -42,7 +42,7 @@ codestyle:
   only:
     - main
   tags:
-    - main
+    - deploy
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
@@ -52,7 +52,7 @@ deploy:
   only:
     - production
   tags:
-    - production
+    - deploy
   image: tiangolo/docker-with-compose
   script:
     - docker-compose -f docker-compose.deploy.yml build
