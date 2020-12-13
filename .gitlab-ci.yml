@@ -44,7 +44,7 @@ codestyle:
 
 deploy:
   stage: deploy
-  only:
+  tags:
     - production
   image: tiangolo/docker-with-compose
   script:
