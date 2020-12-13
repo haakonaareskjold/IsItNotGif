@@ -6,6 +6,8 @@ stages:
 
 composer:
   stage: build
+  only:
+    - main
   image: lorisleiva/laravel-docker:latest
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
@@ -24,6 +26,8 @@ composer:
 
 phpunit:
   stage: test
+  only:
+    - main
   dependencies:
     - composer
   script:
@@ -31,12 +35,16 @@ phpunit:
 
 codestyle:
   stage: test
+  only:
+    - main
   dependencies: []
   script:
     - phpcs --standard=PSR12 --extensions=php app/Http/Controllers/AppController.php
 
 deploy:
   stage: deploy
+  only:
+    - production
   image: tiangolo/docker-with-compose
   script:
     - docker-compose -f docker-compose.deploy.yml build
