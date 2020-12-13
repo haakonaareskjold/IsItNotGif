@@ -7,6 +7,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+    restart: unless-stopped
     volumes:
       - ./:/var/www/
     networks:
@@ -15,16 +16,30 @@ services:
   # Webserver
   nginx:
     image: nginx:1.19.4-alpine
+    restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./:/var/www/
       - ./nginx:/etc/nginx/conf.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.isitnotgif.middlewares=redirect-to-https"
+      - "traefik.http.routers.isitnotgif.rule=Host(`isitnotgif.haakon.wtf`)"
+      - "traefik.http.routers.isitnotgif.entrypoints=web"
+      - "traefik.http.routers.isitnotgif-secure.rule=Host(`isitnotgif.haakon.wtf`)"
+      - "traefik.http.routers.isitnotgif-secure.tls=true"
+      - "traefik.http.routers.isitnotgif-secure.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik-proxy"
     ports:
       - 8000:80
     networks:
       - bridge
+      - traefik-proxy
 
 
 networks:
   bridge:
     driver: bridge
+  traefik-proxy:
+    external: true
