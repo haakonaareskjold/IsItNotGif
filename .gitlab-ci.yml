@@ -6,9 +6,6 @@ stages:
 
 composer:
   stage: build
-  tags:
-    - main
-    - production
   image: lorisleiva/laravel-docker:latest
   script:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
