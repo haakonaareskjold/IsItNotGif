@@ -49,39 +49,29 @@ class AppController extends Controller
         }
 
         // Request will flash the URL submitted as long as the http request has happened, despite the outcome.
-        $request->session()->flash('link', "$file");
+        $request->session()->flash('link', (string)$file);
 
         // Checks if methods are true and then redirects with message it is animated, else its safe, see methods below
         if (
-            $this->checkHttpHeader() == true || $this->checkHttpBody() == true || $this->identifyApng($file)
+            $this->checkHttpHeader() === true || $this->checkHttpBody() === true || $this->identifyApng($file)
         ) {
             return redirect('/')->with('danger', 'CAREFUL, it is animated');
-        } else {
-            return redirect('/')->with('safe', 'it is safe!');
         }
+
+        return redirect('/')->with('safe', 'it is safe!');
     }
 
     // Checks if response body from http GET request contains str of either "gif" or "mp4"
     public function checkHttpBody(): bool
     {
-        if (str_contains($this->response->body(), 'gif') || str_contains($this->response->body(), 'mp4')) {
-            return true;
-        } else {
-            return false;
-        }
+        return str_contains($this->response->body(), 'gif') || str_contains($this->response->body(), 'mp4');
     }
 
     // Checks if header has returned with MIME-types of image/gif or video/mp4
     public function checkHttpHeader(): bool
     {
-        if (
-            $this->response->header('Content-Type') == 'image/gif' ||
-            $this->response->header('Content-Type') == 'video/mp4'
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->response->header('Content-Type') === 'image/gif' ||
+            $this->response->header('Content-Type') === 'video/mp4';
     }
 
     /**
@@ -94,19 +84,25 @@ class AppController extends Controller
     {
         $apng = false;
 
-        $fh = fopen($filepath, 'r');
+        $fh = fopen($filepath, 'rb');
         $previousdata = '';
         while (! feof($fh)) {
             $data = fread($fh, 1024);
             if (str_contains($data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (str_contains($previousdata . $data, 'acTL')) {
+            }
+
+            if (str_contains($previousdata . $data, 'acTL')) {
                 $apng = true;
                 break;
-            } elseif (str_contains($data, 'IDAT')) {
+            }
+
+            if (str_contains($data, 'IDAT')) {
                 break;
-            } elseif (str_contains($previousdata . $data, 'IDAT')) {
+            }
+
+            if (str_contains($previousdata . $data, 'IDAT')) {
                 break;
             }
 
