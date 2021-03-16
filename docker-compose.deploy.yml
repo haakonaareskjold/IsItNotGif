@@ -15,7 +15,7 @@ services:
 
   # Webserver
   nginx:
-    image: nginx:1.19.4-alpine
+    image: nginx:1.19.8-alpine
     restart: unless-stopped
     working_dir: /var/www
     volumes:
